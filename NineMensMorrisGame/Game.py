@@ -12,9 +12,6 @@ class NineMensMorrisGame:
         self.players.append(Player(1))
         self.players.append(Player(2))
 
-    def get_status(self):
-        return self.status
-
     def get_board(self):
         return self.board
     
@@ -23,37 +20,29 @@ class NineMensMorrisGame:
 
     def place_piece(self, player_id, position):
         if self.players[player_id-1].phase != GamePhase.PLACING:
-            print("Player is not in the placing phase")
-            return None
+            raise Exception("Player is not in the placing phase")
         if  self.board[position] == 'x':
             self.board[position] = str(player_id)
             self.players[player_id-1].num_of_pieces -= 1 
             # Switching to Moving phase
             if self.players[player_id-1].num_of_pieces == 0:
                 self.players[player_id-1].switch_phase()
-            return 1
         else:
-            print("Position is already taken")
-            return None
+            raise Exception("Position is already taken")
     
     def move_piece(self, player_id, start, target):
         if self.players[player_id-1].phase == GamePhase.PLACING:
-            print("Player is not in the moving phase")
-            return None
+            raise Exception("Player is not in the moving phase")
         if self.board[target] != 'x':
-            print("Position is already taken")
-            return None
+            raise Exception("Position is already taken")
         if self.board[start] != str(player_id):
-            print("Player "+str(player_id)+" is not located on the starting position")
-            return None
+            raise Exception("Player "+str(player_id)+" is not located on the starting position")
 
         if self.players[player_id-1].phase == GamePhase.FLYING or target in adjacentPositions(start):
             self.board[start] = 'x'
             self.board[target] = str(player_id)
-            return 1
         else:
-            print("Choosen target position is not adjacent")
-            return None
+            raise Exception("Choosen target position is not adjacent")
 
     def is_mill_formed(self, player_id, position):
         for mill in mills:
@@ -71,11 +60,9 @@ class NineMensMorrisGame:
             self.players[opponent_id-1].num_of_removed_pieces += 1
             # Switching to Flying phase
             if self.players[opponent_id-1].num_of_removed_pieces == 6 and self.players[opponent_id-1].num_of_pieces == 0:
-                self.players[opponent_id-1].switch_phase()
-            return 1        
+                self.players[opponent_id-1].switch_phase()   
         else:
-            print("Unable to remove piece due to invalid index")
-            return None
+            raise Exception("Unable to remove piece due to invalid index")
 
     def get_current_phase(self, player_id):
         return self.players[player_id-1].phase
