@@ -45,6 +45,8 @@ class NineMensMorrisGame:
             raise Exception("Choosen target position is not adjacent")
 
     def is_mill_formed(self, player_id, position):
+        if position == -1:
+            return False
         for mill in mills:
             if position in mill and all(self.board[pos] == str(player_id) for pos in mill):
                 return True

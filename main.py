@@ -85,7 +85,6 @@ if __name__ == "__main__":
                         print(str(e))
 
         elif game.get_current_phase(2) == GamePhase.MOVING or game.get_current_phase(2) == GamePhase.FLYING:
-            moved = None
             while True:
                 try:
                     start = int(input("\nPLAYER 2: Choose position of piece you want to move: "))
