@@ -21,9 +21,6 @@ if __name__ == "__main__":
                     print(str(e))
 
             if game.is_mill_formed(1,position1):
-                if game.are_all_mills() == 2:
-                    winner = 2
-                    break
 
                 while True:
                     try:
@@ -46,9 +43,7 @@ if __name__ == "__main__":
                     print(str(e))
 
             if game.is_mill_formed(1,target):
-                if game.are_all_mills() == 2:
-                    winner = 2
-                    break
+    
                 while True:
                     try:
                         to_be_removed = int(input("\nPLAYER 1: Choose piece of Player 2 you would like to remove: "))
@@ -72,9 +67,7 @@ if __name__ == "__main__":
                     print(str(e))
            
             if game.is_mill_formed(2,position2):
-                if game.are_all_mills() == 1:
-                    winner = 1
-                    break
+        
                 while True:
                     try:
                         to_be_removed = int(input("\nPLAYER 2: Choose piece of Player 1 you would like to remove: "))
@@ -96,9 +89,7 @@ if __name__ == "__main__":
                     print(str(e))
 
             if game.is_mill_formed(2,target):
-                if game.are_all_mills() == 1:
-                    winner = 1
-                    break
+    
                 while True:
                     try:
                         to_be_removed = int(input("\nPLAYER 2: Choose piece of Player 1 you would like to remove: "))

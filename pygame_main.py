@@ -1,14 +1,17 @@
 import pygame
 from NineMensMorrisGame.Game import NineMensMorrisGame
+from NineMensMorrisGame.utils import GamePhase
 
-from NineMensMorrisGame.utils import BLACK, WHITE, GamePhase
+WHITE = (255, 255, 255)
+BLACK = (0, 0, 0)
+SCREEN_WIDTH = 900
+SCREEN_HEIGHT = 560
+FPS = 20
 
 pygame.init()
 pygame.display.set_caption("Nine Men's Morris")
-
 icon = pygame.image.load('static/GameLogo.png')
 game_board = pygame.image.load('static/GameBoard.png')
-
 pygame.display.set_icon(icon)
 
 font = pygame.font.Font(None, 36)
@@ -41,16 +44,12 @@ coords = {
     22: (373, 610, 423, 660),
     23: (511, 610, 561, 660)
 }
-
 scaling_factor = 500/843
 clickables = [pygame.Rect(scaling_factor*c[0], scaling_factor*c[1], 60, 60) for c in coords.values()]
-fps = 20
 clock = pygame.time.Clock()
 pieces = [(int(area.x + area.width / 2), int(area.y + area.height / 2)) for area in clickables]
 
 #STATE VARIABLES
-global global_player, placed, mill_tested, game, text_command
-global placed_index, start, target
 global_player = 1
 placed = False
 mill_tested = False
@@ -61,7 +60,7 @@ game = NineMensMorrisGame()
 text_command = "PLAYER 1: Choose position where to place your piece: "
 
 def drawBoard(board: list[str]):
-    for i, (x, y) in enumerate(pieces):
+    for i in range(len(pieces)):
         if board[i] == '2':
             pygame.draw.circle(screen, BLACK, pieces[i], 15)
         elif board[i] == '1':
@@ -113,7 +112,7 @@ def handle_moving():
         start = None
         target = None
 
-screen = pygame.display.set_mode((900,560))
+screen = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
 running = True
 winner = None
 
@@ -132,13 +131,6 @@ while running:
         if winner is None:
             if not mill_tested and placed:
                 if game.is_mill_formed(global_player,placed_index):
-                    if ((game.are_all_mills() == 1 and global_player == 2) or
-                        (game.are_all_mills() == 2 and global_player == 1)):
-                        winner = game.are_all_mills()
-                        text_command ="The winner is Player: "+str(winner)
-                        pygame.display.update()
-                        break
-
                     text_command = "PLAYER "+str(global_player)+": Choose piece of opponent you would like to remove: "
                     handle_removing(global_player, event)
                 else:
@@ -163,7 +155,7 @@ while running:
                     
         pygame.display.update()
         drawBoard(game.get_board())
-        clock.tick(fps)
+        clock.tick(FPS)
 
     if winner is None:
         winner = game.is_winner()

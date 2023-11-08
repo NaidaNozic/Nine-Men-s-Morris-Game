@@ -43,9 +43,6 @@ def adjacentPositions(position):
       ]
       return adjacent[position]
 
-WHITE = (255, 255, 255)
-BLACK = (0, 0, 0)
-
 def printBoard(board):
     print(board[0] + "(00)----------------------" + board[1] +
           "(01)----------------------" + board[2] + "(02)")
