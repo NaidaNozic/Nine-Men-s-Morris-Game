@@ -1,5 +1,9 @@
 import pygame
-from NineMensMorrisGame.Game import NineMensMorrisGame
+from GUIControl.GameGlobal import GameGlobal
+from GUIControl.MovingState import MovingState
+from GUIControl.PlacingState import PlacingState
+from GUIControl.RemovingState import RemovingState
+from NineMensMorrisGame.Game import Game
 from NineMensMorrisGame.utils import GamePhase
 
 WHITE = (255, 255, 255)
@@ -49,16 +53,6 @@ clickables = [pygame.Rect(scaling_factor*c[0], scaling_factor*c[1], 60, 60) for 
 clock = pygame.time.Clock()
 pieces = [(int(area.x + area.width / 2), int(area.y + area.height / 2)) for area in clickables]
 
-#STATE VARIABLES
-global_player = 1
-placed = False
-mill_tested = False
-placed_index = -1
-start = None
-target = None
-game = NineMensMorrisGame()
-text_command = "PLAYER 1: Choose position where to place your piece: "
-
 def drawBoard(board: list[str]):
     for i in range(len(pieces)):
         if board[i] == '2':
@@ -67,60 +61,29 @@ def drawBoard(board: list[str]):
             pygame.draw.circle(screen, BLACK, pieces[i], 16)
             pygame.draw.circle(screen, WHITE, pieces[i], 15)
 
-def handle_placing(player, event):
-    global placed, mill_tested, game, text_command
-    if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-        for i, area in enumerate(clickables):
-            if area.collidepoint(event.pos):
-                try:
-                    game.place_piece(player, i)
-                    placed = True
-                    mill_tested = False
-                    return i
-                except Exception as e:
-                    text_command = str(e)
-
-def handle_removing(player, event):
-    global placed, global_player, mill_tested, placed_index, game, text_command
-    if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-        for i, area in enumerate(clickables):
-            if area.collidepoint(event.pos):
-                try:
-                    game.remove_piece(player,i)
-                    global_player = 2 if global_player == 1 else 1
-                    placed = False
-                    mill_tested = True
-                    placed_index = -1
-                except Exception as e:
-                    text_command = str(e)
-
 def handle_start_target(event):
     if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
         for i, area in enumerate(clickables):
             if area.collidepoint(event.pos):
-                    return i
-
-def handle_moving():
-    global start, target, text_command, placed, global_player, mill_tested, placed_index, game, placed_index
-    try:
-        game.move_piece(global_player,start,target)
-        placed = True
-        mill_tested = False
-        placed_index = target
-    except Exception as e:
-        text_command = str(e)
-        start = None
-        target = None
+                return i
 
 screen = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
 running = True
 winner = None
 
+placing_state = PlacingState() 
+removing_state = RemovingState()
+moving_state = MovingState()
+current_state = None
+
+game = Game()
+state = GameGlobal()
+
 while running:
     screen.fill((255, 255, 255))
     screen.blit(game_board, (50, 110))
     screen.blit(text_surface, (50, 20))
-    text = font_small.render(text_command, True, BLACK)
+    text = font_small.render(state.text_command, True, BLACK)
     screen.blit(text, (50, 60))
     drawBoard(game.get_board())
 
@@ -129,29 +92,34 @@ while running:
             running = False
 
         if winner is None:
-            if not mill_tested and placed:
-                if game.is_mill_formed(global_player,placed_index):
-                    text_command = "PLAYER "+str(global_player)+": Choose piece of opponent you would like to remove: "
-                    handle_removing(global_player, event)
+            if not state.mill_tested and state.placed:
+                if game.is_mill_formed(state.global_player,state.placed_index):
+                    state.text_command = f"PLAYER {state.global_player}: Choose piece of opponent you would like to remove: "
+                    current_state = removing_state
                 else:
-                    global_player = 2 if global_player == 1 else 1
-                    placed = False
-                    placed_index = -1
-                    mill_tested = True
+                    state.global_player = 2 if state.global_player == 1 else 1
+                    state.placed = False
+                    state.placed_index = None
+                    state.mill_tested = True
             else:
-                if game.get_current_phase(global_player) == GamePhase.PLACING and not placed:
-                    text_command = "PLAYER "+str(global_player)+": Choose position where to place your piece: "
-                    placed_index = handle_placing(global_player, event)
+                current_phase = game.get_current_phase(state.global_player)
+                if current_phase == GamePhase.PLACING and not state.placed:
+                    state.text_command = f"PLAYER {state.global_player}: Choose position where to place your piece: "
+                    current_state = placing_state
                     
-                elif game.get_current_phase(global_player) == GamePhase.MOVING or game.get_current_phase(global_player) == GamePhase.FLYING and not placed:
-                    if start is None and target is None:
-                        text_command = "PLAYER "+ str(global_player) +": Choose position of piece you want to move: "
-                        start = handle_start_target(event)
-                    elif start is not None and target is None:
-                        text_command = "PLAYER " + str(global_player) + ": Choose target position to which you want to move your piece"
-                        target = handle_start_target(event)
+                elif current_phase == GamePhase.MOVING or current_phase == GamePhase.FLYING and not state.placed:
+                    if state.start is None and state.target is None:
+                        state.text_command = f"PLAYER {state.global_player}: Choose position of piece you want to move: "
+                        state.start = handle_start_target(event)
+                    elif state.start is not None and state.target is None:
+                        state.text_command = f"PLAYER {state.global_player}: Choose target position to which you want to move your piece"
+                        state.target = handle_start_target(event)
                     else:
-                        handle_moving()
+                        current_state = moving_state
+
+            if current_state is not None:
+                current_state.handle_events(game, event, clickables, state)
+                current_state = None
                     
         pygame.display.update()
         drawBoard(game.get_board())
@@ -160,4 +128,4 @@ while running:
     if winner is None:
         winner = game.is_winner()
         if winner is not None:
-            text_command ="The winner is Player: "+str(winner)
+            state.text_command =f"The winner is Player: {winner}"

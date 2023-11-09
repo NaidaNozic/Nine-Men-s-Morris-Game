@@ -1,9 +1,9 @@
-from NineMensMorrisGame.Game import NineMensMorrisGame
+from NineMensMorrisGame.Game import Game
 from NineMensMorrisGame.utils import GamePhase, printBoard
 
 if __name__ == "__main__":
     print("Welcome to the Nine Men's Morris Game")
-    game = NineMensMorrisGame()
+    game = Game()
     printBoard(game.get_board())
     winner = None
     while(winner is None):

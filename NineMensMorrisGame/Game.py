@@ -2,19 +2,17 @@ from NineMensMorrisGame.Player import Player
 from NineMensMorrisGame.utils import adjacentPositions, mills
 from NineMensMorrisGame.utils import GamePhase
 
-class NineMensMorrisGame:
+class Game:
     __instance = None
 
     def __new__(cls):
         if cls.__instance is None:
-            cls.__instance = super(NineMensMorrisGame, cls).__new__(cls)
+            cls.__instance = super(Game, cls).__new__(cls)
         return cls.__instance
     
     def __init__(self):
         self.__board = ['x' for _ in range(24)]
-        self.__players = []
-        self.__players.append(Player(1))
-        self.__players.append(Player(2))
+        self.__players = [Player(1), Player(2)]
 
     def get_board(self):
         return self.__board
@@ -23,14 +21,14 @@ class NineMensMorrisGame:
         return self.__players
 
     def place_piece(self, player_id, position):
-        if self.__players[player_id-1].phase != GamePhase.PLACING:
+        player = self.__players[player_id-1]
+        if player.phase != GamePhase.PLACING:
             raise Exception("Player is not in the placing phase")
         if  self.__board[position] == 'x':
             self.__board[position] = str(player_id)
-            self.__players[player_id-1].num_of_pieces -= 1 
-            # Switching to Moving phase
-            if self.__players[player_id-1].num_of_pieces == 0:
-                self.__players[player_id-1].switch_phase()
+            player.num_of_pieces -= 1 
+            if player.num_of_pieces == 0:
+                player.switch_phase()
         else:
             raise Exception("Position is already taken")
     
