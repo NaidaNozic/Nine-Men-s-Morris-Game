@@ -13,7 +13,4 @@ class Player:
         self.phase = GamePhase.PLACING
 
     def switch_phase(self):
-        if self.phase == GamePhase.PLACING:
-            self.phase = GamePhase.MOVING
-        elif self.phase == GamePhase.MOVING:
-            self.phase = GamePhase.FLYING
+        pass

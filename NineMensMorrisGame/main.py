@@ -1,5 +1,6 @@
 import pygame
 from NineMensMorrisGame.Components.Game import Game
+from NineMensMorrisGame.Components.Players.HumanPlayerFactory import HumanPlayerFactory
 from NineMensMorrisGame.Gui.Config import Config
 from NineMensMorrisGame.Gui.Global import Global
 from NineMensMorrisGame.Gui.Pieces.BorderDecorator import BorderDecorator
@@ -56,7 +57,9 @@ removing_state = RemovingState()
 moving_state = MovingState()
 current_state = None
 
-game = Game()
+human_player1 = HumanPlayerFactory().create_player(1)
+human_player2 = HumanPlayerFactory().create_player(2)
+game = Game(human_player1, human_player2)
 state = Global()
 config = Config()
 
@@ -85,7 +88,7 @@ def main():
         screen.blit(text_surface, (50, 20))
         screen.blit(font_small.render(state.text_command, True, Config.BLACK), (50, 60))
         screen.blit(font_small.render(state.error_message, True, Config.BLACK), (50, 535))
-        drawBoard(game.get_board())
+        drawBoard(game.board)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -102,7 +105,7 @@ def main():
                         state.placed_index = None
                         state.mill_tested = True
                 else:
-                    current_phase = game.get_current_phase(state.global_player)
+                    current_phase = game.players[state.global_player-1].phase
                     if current_phase == GamePhase.PLACING and not state.placed:
                         state.text_command = f"PLAYER {state.global_player}: Choose position where to place your piece: "
                         current_state = placing_state
@@ -120,7 +123,7 @@ def main():
                     current_state = None
                         
             pygame.display.update()
-            drawBoard(game.get_board())
+            drawBoard(game.board)
             clock.tick(Config.FPS)
 
         if winner is None:
