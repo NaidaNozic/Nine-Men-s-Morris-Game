@@ -23,7 +23,7 @@ class Game:
     def place_piece(self, player_id, position):
         player = self.__players[player_id-1]
         if player.phase != GamePhase.PLACING:
-            raise Exception("Player is not in the placing phase")
+            raise Exception("Player is not in placing phase")
         if  self.__board[position] == 'x':
             self.__board[position] = str(player_id)
             player.num_of_pieces -= 1 
@@ -33,18 +33,26 @@ class Game:
             raise Exception("Position is already taken")
     
     def move_piece(self, player_id, start, target):
-        if self.__players[player_id-1].phase == GamePhase.PLACING:
-            raise Exception("Player is not in the moving phase")
-        if self.__board[target] != 'x':
-            raise Exception("Position is already taken")
-        if self.__board[start] != str(player_id):
-            raise Exception("Player "+str(player_id)+" is not located on the starting position")
-
-        if self.__players[player_id-1].phase == GamePhase.FLYING or target in adjacentPositions(start):
+        try:
+            self.validate_start_target(player_id, start, target)
+            if target is None:
+                return False
             self.__board[start] = 'x'
             self.__board[target] = str(player_id)
-        else:
-            raise Exception("Choosen target position is not adjacent")
+            return True
+        except Exception as e:
+            raise
+        
+    def validate_start_target(self, player_id, start, target):
+        if self.__players[player_id-1].phase == GamePhase.PLACING:
+            raise Exception("Player is not in moving phase")
+        if self.__board[start] != str(player_id):
+            raise Exception("Player "+str(player_id)+" is not on the starting position")
+        if target is not None:
+            if self.__board[target] != 'x':
+                raise Exception("Position is already taken")
+            if not (self.__players[player_id-1].phase == GamePhase.FLYING or target in adjacentPositions(start)):
+                raise Exception("Choosen target is not adjacent")
 
     def is_mill_formed(self, player_id, position):
         if position == -1:
@@ -62,11 +70,10 @@ class Game:
             self.__board[position] == str(opponent_id) and opponent_id in self.are_all_mills()):
             self.__board[position] = 'x'
             self.__players[opponent_id-1].num_of_removed_pieces += 1
-            # Switching to Flying phase
             if self.__players[opponent_id-1].num_of_removed_pieces == 6 and self.__players[opponent_id-1].num_of_pieces == 0:
                 self.__players[opponent_id-1].switch_phase()   
         else:
-            raise Exception("Unable to remove piece due to invalid index")
+            raise Exception("Invalid index")
 
     def get_current_phase(self, player_id):
         return self.__players[player_id-1].phase

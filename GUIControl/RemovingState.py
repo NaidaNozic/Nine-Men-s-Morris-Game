@@ -10,5 +10,6 @@ class RemovingState(GameState):
             state.placed = False
             state.mill_tested = True
             state.placed_index = None
+            state.error_message = str()
         except Exception as e:
-            state.text_command = str(e)
+            state.error_message = str(e)

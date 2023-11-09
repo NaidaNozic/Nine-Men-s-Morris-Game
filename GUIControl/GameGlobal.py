@@ -14,3 +14,4 @@ class GameGlobal:
         self.start = None
         self.target = None
         self.text_command = "PLAYER 1: Choose position where to place your piece: "
+        self.error_message =str()

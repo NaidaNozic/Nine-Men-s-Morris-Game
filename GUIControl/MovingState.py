@@ -1,21 +1,20 @@
-
 from GUIControl.GameState import GameState
 
 class MovingState(GameState):
 
     def handle_events(self, game, state, index):
         try:
-            if state.start is None and state.target is None:
-                state.start = index
-            elif state.start is not None and state.target is None:
-                state.target = index
-                game.move_piece(state.global_player,state.start,state.target)
+            state.target = index if state.start is not None and state.target is None else None
+            state.start = index if state.start is None else state.start
+            moved = game.move_piece(state.global_player,state.start,state.target)
+            state.error_message = str()
+            if moved is True:
                 state.placed = True
                 state.mill_tested = False
                 state.placed_index = state.target
                 state.start = None
                 state.target = None
         except Exception as e:
-            state.text_command = str(e)
+            state.error_message = str(e)
             state.start = None
             state.target = None

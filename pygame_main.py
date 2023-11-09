@@ -9,7 +9,7 @@ from NineMensMorrisGame.utils import GamePhase
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 SCREEN_WIDTH = 900
-SCREEN_HEIGHT = 560
+SCREEN_HEIGHT = 580
 FPS = 20
 
 pygame.init()
@@ -84,8 +84,8 @@ while running:
     screen.fill((255, 255, 255))
     screen.blit(game_board, (50, 110))
     screen.blit(text_surface, (50, 20))
-    text = font_small.render(state.text_command, True, BLACK)
-    screen.blit(text, (50, 60))
+    screen.blit(font_small.render(state.text_command, True, BLACK), (50, 60))
+    screen.blit(font_small.render(state.error_message, True, BLACK), (50, 535))
     drawBoard(game.get_board())
 
     for event in pygame.event.get():
