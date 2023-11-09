@@ -61,11 +61,12 @@ def drawBoard(board: list[str]):
             pygame.draw.circle(screen, BLACK, pieces[i], 16)
             pygame.draw.circle(screen, WHITE, pieces[i], 15)
 
-def handle_start_target(event):
+def detect_button_click(event) -> int | None:
     if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
         for i, area in enumerate(clickables):
             if area.collidepoint(event.pos):
                 return i
+    return None
 
 screen = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
 running = True
@@ -110,15 +111,13 @@ while running:
                 elif current_phase == GamePhase.MOVING or current_phase == GamePhase.FLYING and not state.placed:
                     if state.start is None and state.target is None:
                         state.text_command = f"PLAYER {state.global_player}: Choose position of piece you want to move: "
-                        state.start = handle_start_target(event)
                     elif state.start is not None and state.target is None:
                         state.text_command = f"PLAYER {state.global_player}: Choose target position to which you want to move your piece"
-                        state.target = handle_start_target(event)
-                    else:
-                        current_state = moving_state
+                    current_state = moving_state
 
-            if current_state is not None:
-                current_state.handle_events(game, event, clickables, state)
+            colidepoint_index = detect_button_click(event)
+            if colidepoint_index is not None and current_state is not None:
+                current_state.handle_events(game, state, colidepoint_index)
                 current_state = None
                     
         pygame.display.update()
