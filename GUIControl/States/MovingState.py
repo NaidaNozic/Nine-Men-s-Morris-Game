@@ -1,4 +1,4 @@
-from GUIControl.GameState import GameState
+from GUIControl.States.GameState import GameState
 
 class MovingState(GameState):
 

@@ -1,5 +1,5 @@
 import pygame
-from GUIControl.GameState import GameState
+from GUIControl.States.GameState import GameState
 
 False
 class PlacingState(GameState):

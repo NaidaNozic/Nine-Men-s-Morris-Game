@@ -1,8 +1,12 @@
 import pygame
+from GUIControl.GamePiece.BorderDecorator import BorderDecorator
+from GUIControl.GamePiece.DefaultPiece import DefaultPiece
 from GUIControl.GameGlobal import GameGlobal
-from GUIControl.MovingState import MovingState
-from GUIControl.PlacingState import PlacingState
-from GUIControl.RemovingState import RemovingState
+from GUIControl.GamePiece.Piece import Piece
+from GUIControl.States.MovingState import MovingState
+from GUIControl.States.PlacingState import PlacingState
+from GUIControl.States.RemovingState import RemovingState
+from NineMensMorrisGame.Game import Game
 from NineMensMorrisGame.Game import Game
 from NineMensMorrisGame.utils import GamePhase
 
@@ -16,6 +20,7 @@ pygame.init()
 pygame.display.set_caption("Nine Men's Morris")
 icon = pygame.image.load('static/GameLogo.png')
 game_board = pygame.image.load('static/GameBoard.png')
+screen = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
 pygame.display.set_icon(icon)
 
 font = pygame.font.Font(None, 36)
@@ -56,10 +61,10 @@ pieces = [(int(area.x + area.width / 2), int(area.y + area.height / 2)) for area
 def drawBoard(board: list[str]):
     for i in range(len(pieces)):
         if board[i] == '2':
-            pygame.draw.circle(screen, BLACK, pieces[i], 15)
+            DefaultPiece(screen, BLACK, pieces[i], 15).draw()
         elif board[i] == '1':
-            pygame.draw.circle(screen, BLACK, pieces[i], 16)
-            pygame.draw.circle(screen, WHITE, pieces[i], 15)
+            white_piece = DefaultPiece(screen, WHITE, pieces[i], 15)
+            BorderDecorator(white_piece, BLACK, 16).draw()
 
 def detect_button_click(event) -> int | None:
     if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
@@ -68,7 +73,6 @@ def detect_button_click(event) -> int | None:
                 return i
     return None
 
-screen = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
 running = True
 winner = None
 
