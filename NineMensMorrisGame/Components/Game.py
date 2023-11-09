@@ -1,4 +1,4 @@
-from NineMensMorrisGame.Player import Player
+from NineMensMorrisGame.Components.Player import Player
 from NineMensMorrisGame.utils import adjacentPositions, mills
 from NineMensMorrisGame.utils import GamePhase
 

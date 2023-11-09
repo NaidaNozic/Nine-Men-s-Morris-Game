@@ -1,5 +1,5 @@
 import pygame
-from GUIControl.GamePiece.DecoratorPiece import DecoratorPiece
+from NineMensMorrisGame.Gui.Pieces.DecoratorPiece import DecoratorPiece
 
 class BorderDecorator(DecoratorPiece):
 

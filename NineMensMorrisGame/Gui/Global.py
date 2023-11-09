@@ -1,9 +1,9 @@
-class GameGlobal:
+class Global:
     __instance = None      
 
     def __new__(cls):
         if cls.__instance is None:
-            cls.__instance = super(GameGlobal, cls).__new__(cls)
+            cls.__instance = super(Global, cls).__new__(cls)
         return cls.__instance
     
     def __init__(self):

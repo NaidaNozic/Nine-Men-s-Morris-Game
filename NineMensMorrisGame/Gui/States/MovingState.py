@@ -1,4 +1,4 @@
-from GUIControl.States.GameState import GameState
+from NineMensMorrisGame.Gui.States.State import GameState
 
 class MovingState(GameState):
 

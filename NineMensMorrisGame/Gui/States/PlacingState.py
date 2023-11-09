@@ -1,7 +1,6 @@
 import pygame
-from GUIControl.States.GameState import GameState
+from NineMensMorrisGame.Gui.States.State import GameState
 
-False
 class PlacingState(GameState):
     
     def handle_events(self, game, state, index):

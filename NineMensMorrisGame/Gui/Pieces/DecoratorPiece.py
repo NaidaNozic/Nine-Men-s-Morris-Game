@@ -1,4 +1,4 @@
-from GUIControl.GamePiece.Piece import Piece
+from NineMensMorrisGame.Gui.Pieces.Piece import Piece
 
 class DecoratorPiece(Piece):
     def __init__(self, piece):

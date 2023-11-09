@@ -1,4 +1,4 @@
-from NineMensMorrisGame.Game import Game
+from NineMensMorrisGame.Components.Game import Game
 from NineMensMorrisGame.utils import GamePhase, printBoard
 
 if __name__ == "__main__":
