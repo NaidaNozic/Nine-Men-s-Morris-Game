@@ -9,6 +9,6 @@ class RemovingState(GameState):
             state.global_player = 2 if state.global_player == 1 else 1
             state.placed = False
             state.mill_tested = True
-            state.placed_index = -1
+            state.placed_index = None
         except Exception as e:
             state.text_command = str(e)
