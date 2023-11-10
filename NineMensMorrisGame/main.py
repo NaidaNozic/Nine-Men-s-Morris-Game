@@ -9,6 +9,7 @@ from NineMensMorrisGame.Gui.States.MovingState import MovingState
 from NineMensMorrisGame.Gui.States.PlacingState import PlacingState
 from NineMensMorrisGame.Gui.States.RemovingState import RemovingState
 from NineMensMorrisGame.utils import GamePhase
+from NineMensMorrisGame.utils import coords
 
 pygame.init()
 pygame.display.set_caption("Nine Men's Morris")
@@ -21,32 +22,6 @@ font = pygame.font.Font(None, 36)
 font_small = pygame.font.Font(None, 26)
 text_surface = font.render("Nine Men's Morris", True, Config.BLACK)
 
-coords = {
-    0: (45, 140, 95, 190),
-    1: (373, 140, 423, 190),
-    2: (701, 140, 751, 190),
-    3: (45, 468, 95, 518),
-    4: (701, 468, 751, 518),
-    5: (45, 796, 95, 846),
-    6: (373, 796, 423, 846),
-    7: (701, 796, 751, 846),
-    8: (148, 246, 198, 296),
-    9: (373, 246, 423, 296),
-    10: (600, 246, 650, 296),
-    11: (148, 468, 198, 518),
-    12: (600, 468, 650, 518),
-    13: (148, 695, 198, 745),
-    14: (373, 695, 423, 745),
-    15: (600, 695, 650, 745),
-    16: (235, 337, 285, 387),
-    17: (373, 337, 423, 387),
-    18: (511, 337, 561, 387),
-    19: (235, 468, 285, 518),
-    20: (511, 468, 561, 518),
-    21: (235, 610, 285, 660),
-    22: (373, 610, 423, 660),
-    23: (511, 610, 561, 660)
-}
 scaling_factor = 500/843
 clickables = [pygame.Rect(scaling_factor*c[0], scaling_factor*c[1], 60, 60) for c in coords.values()]
 clock = pygame.time.Clock()
