@@ -14,3 +14,8 @@ class Player:
 
     def switch_phase(self):
         pass
+
+    def reset(self):
+        self.num_of_pieces = 9
+        self.num_of_removed_pieces = 0
+        self.phase = GamePhase.PLACING
