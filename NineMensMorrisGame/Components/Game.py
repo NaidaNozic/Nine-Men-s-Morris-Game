@@ -119,6 +119,12 @@ class Game:
         if index >= 0:
             self.set_up_board(index)
 
+        move = self.memory.get_moves()[index].split(",")
+        active_player = int(move[1])
+        if move[0] != 'Removal':
+            active_player = 2 if int(move[1]) == 1 else 1
+        return active_player
+
     def set_up_board(self, index: int):
         self.board = ['x' for _ in range(24)]
         for player in self.players:
@@ -144,6 +150,6 @@ class Game:
                         int(move[1]) - 1].num_of_pieces == 0:
                         self.players[move[1] - 1].switch_phase()
                 case _:
-                    return
+                    pass
             i += 1
 

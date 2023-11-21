@@ -26,7 +26,7 @@ class Memory(metaclass=MemoryMeta):
         self.index_of_move = 0
 
     def write_move(self, move: str):
-        self.allmoves = self.allmoves[:self.index_of_move]
+        self.allmoves = self.allmoves[:self.index_of_move + 1]
         self.allmoves.append(move)
         self.index_of_move = self.index_of_move + 1
     pass
@@ -60,10 +60,10 @@ class Memory(metaclass=MemoryMeta):
             print(move)
 
     def undo(self):
-        if self.index_of_move >= len(self.allmoves):
-            self.index_of_move = len(self.allmoves)-1
-            return self.index_of_move
         if self.index_of_move >= 0:
+            move = self.allmoves[self.index_of_move].split(",")
+            if move[0] == "Removal":
+                self.index_of_move = self.index_of_move - 1
             self.index_of_move = self.index_of_move - 1
             self.see_moves()
             return self.index_of_move
