@@ -71,6 +71,10 @@ class Memory(metaclass=MemoryMeta):
     def redo(self):
         if self.index_of_move < len(self.allmoves) - 1:
             self.index_of_move = self.index_of_move + 1
+            if self.index_of_move < len(self.allmoves) - 1:
+                current_move = self.allmoves[self.index_of_move+1].split(",")
+                if current_move[0] == 'Removal':
+                    self.index_of_move = self.index_of_move + 1
             return self.index_of_move
         return -1
 

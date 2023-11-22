@@ -100,11 +100,13 @@ class Game:
         index = self.memory.undo()
         if index >= -1:
             self.set_up_board(index)
+        return index
 
     def redo(self):
         index = self.memory.redo()
         if index >= 0:
             self.set_up_board(index)
+        return index
 
     def save(self):
         self.memory.save_game()

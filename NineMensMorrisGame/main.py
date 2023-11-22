@@ -63,11 +63,11 @@ def detect_button_click(event) -> int | None:
 
 
 def undo():
-    game.undo()
+    return game.undo()
 
 
 def redo():
-    game.redo()
+    return game.redo()
 
 
 def save():
@@ -110,12 +110,12 @@ def main():
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if 550 <= mouse[0] <= 690 and 200 <= mouse[1] <= 240:
-                    undo()
-                    state.global_player = 2 if state.global_player == 1 else 1
+                    if undo() >= 0:
+                        state.global_player = 2 if state.global_player == 1 else 1
 
                 elif 550 <= mouse[0] <= 690 and 250 <= mouse[1] <= 290:
-                    redo()
-                    state.global_player = 2 if state.global_player == 1 else 1
+                    if redo() >= 0:
+                        state.global_player = 2 if state.global_player == 1 else 1
 
                 elif 550 <= mouse[0] <= 690 and 300 <= mouse[1] <= 340:
                     save()
