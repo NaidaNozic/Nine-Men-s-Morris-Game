@@ -26,7 +26,6 @@ class Game:
                 player.switch_phase()
             write = str("Placement," + str(player_id) + "," + str(position) + "," +
                         str(int(old_phase.value)) + "," + str(int(player.phase.value)))
-            print(write)
             self.memory.write_move(write)
         else:
             raise Exception("Position is already taken")
@@ -39,9 +38,7 @@ class Game:
             self.board[start] = 'x'
             self.board[target] = str(player_id)
             write = str("Movement," + str(player_id) + "," + str(start) + "," + str(target))
-            print(write)
             self.memory.write_move(write)
-            self.memory.see_moves()
             return True
         except Exception as e:
             raise
@@ -79,7 +76,6 @@ class Game:
                 self.players[opponent_id - 1].switch_phase()
             write = str("Removal," + str(opponent_id) + "," + str(position) + "," +
                         str(int(old_phase.value)) + "," + str(int(self.players[opponent_id - 1].phase.value)))
-            print(write)
             self.memory.write_move(write)
         else:
             raise Exception("Invalid index")

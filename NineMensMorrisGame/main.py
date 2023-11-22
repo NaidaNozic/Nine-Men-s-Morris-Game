@@ -75,8 +75,8 @@ def save():
 
 
 def load():
-    game.load()
-
+    next_player = game.load()
+    return next_player
 
 def main():
     running = True
@@ -89,16 +89,16 @@ def main():
         screen.blit(font_small.render(state.text_command, True, Config.BLACK), (50, 60))
         screen.blit(font_small.render(state.error_message, True, Config.BLACK), (50, 535))
 
-        pygame.draw.rect(screen, (150, 150, 150), [550, 50, 140, 40])
-        pygame.draw.rect(screen, (150, 150, 150), [550, 100, 140, 40])
+        pygame.draw.rect(screen, (150, 150, 150), [550, 200, 140, 40])
+        pygame.draw.rect(screen, (150, 150, 150), [550, 250, 140, 40])
 
-        pygame.draw.rect(screen, (100, 100, 170), [550, 150, 140, 40])
-        pygame.draw.rect(screen, (100, 100, 170), [550, 200, 140, 40])
+        pygame.draw.rect(screen, (100, 100, 170), [550, 300, 140, 40])
+        pygame.draw.rect(screen, (100, 100, 170), [550, 350, 140, 40])
 
-        screen.blit(text_undo, (585, 58))
-        screen.blit(text_redo, (585, 108))
-        screen.blit(text_save, (585, 158))
-        screen.blit(text_load, (585, 208))
+        screen.blit(text_undo, (585, 208))
+        screen.blit(text_redo, (585, 258))
+        screen.blit(text_save, (585, 308))
+        screen.blit(text_load, (585, 358))
 
         drawBoard(game.board)
 
@@ -109,17 +109,20 @@ def main():
                 running = False
 
             if event.type == pygame.MOUSEBUTTONDOWN:
-                if 550 <= mouse[0] <= 690 and 50 <= mouse[1] <= 90:
+                if 550 <= mouse[0] <= 690 and 200 <= mouse[1] <= 240:
                     undo()
+                    state.global_player = 2 if state.global_player == 1 else 1
 
-                elif 550 <= mouse[0] <= 690 and 100 <= mouse[1] <= 140:
+                elif 550 <= mouse[0] <= 690 and 250 <= mouse[1] <= 290:
                     redo()
+                    state.global_player = 2 if state.global_player == 1 else 1
 
-                elif 550 <= mouse[0] <= 690 and 150 <= mouse[1] <= 190:
+                elif 550 <= mouse[0] <= 690 and 300 <= mouse[1] <= 340:
                     save()
 
-                elif 550 <= mouse[0] <= 690 and 200 <= mouse[1] <= 240:
-                    load()
+                elif 550 <= mouse[0] <= 690 and 350 <= mouse[1] <= 390:
+                    next_player = load()
+                    state.global_player = next_player
 
             if winner is None:
                 if not state.mill_tested and state.placed:
