@@ -27,4 +27,6 @@
 
   </ul>
 
+  <img src="screenshots/MainGame.jpg">
+
 
